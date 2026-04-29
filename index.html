@@ -168,7 +168,7 @@ Actualizar
 <div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="kpi-label">Total Clientes</div><div class="kpi-value" id="kpiTotal">-</div><div class="kpi-sub">instalaciones</div></div>
 <div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Activos</div><div class="kpi-value" id="kpiActivos">-</div><div class="kpi-sub">sistemas online</div></div>
 <div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="kpi-label">Suspendidos</div><div class="kpi-value" id="kpiSuspendidos">-</div><div class="kpi-sub">sin acceso</div></div>
-<div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-label">Ingreso Mensual</div><div class="kpi-value" id="kpiIngresos">-</div><div class="kpi-sub">estimado</div></div>
+<div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-label" style="display:flex;align-items:center;justify-content:space-between;">Ingreso Mensual<button id="btnOjoIngresos" style="background:none;border:none;cursor:pointer;color:var(--gray);padding:0;display:flex;" title="Mostrar/ocultar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="kpi-value" id="kpiIngresos">-</div><div class="kpi-sub">estimado</div></div>
 <div class="kpi-card"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="kpi-label">Mejoras</div><div class="kpi-value" id="kpiMejoras">-</div><div class="kpi-sub">pendientes</div></div>
 </div>
 <div class="tabla-card">
@@ -250,7 +250,7 @@ function renderDashboard(data){
   document.getElementById("kpiTotal").textContent = clientes.length;
   document.getElementById("kpiActivos").textContent = activos;
   document.getElementById("kpiSuspendidos").textContent = suspendidos;
-  document.getElementById("kpiIngresos").textContent = ingreso ? "$"+ingreso.toLocaleString("es-AR") : "-";
+  ingresosReal = ingreso ? "$"+ingreso.toLocaleString("es-AR") : "-"; document.getElementById("kpiIngresos").textContent = "••••••"; ingresosVisible = false; document.getElementById("btnOjoIngresos").style.color = "var(--gray)";
   document.getElementById("kpiMejoras").textContent = mejoras || "-";
   var tbody = document.getElementById("tablaBody");
   if(clientes.length === 0){ tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;padding:24px;color:var(--gray)'>Sin clientes</td></tr>"; return; }
@@ -345,6 +345,23 @@ document.getElementById("modalCancel").addEventListener("click", cerrarModal);
     allow="autoplay" frameborder="0"></iframe>
 </div>
 <script>
+
+var ingresosVisible = false;
+var ingresosReal = "-";
+
+document.getElementById("btnOjoIngresos").addEventListener("click", function(){
+  ingresosVisible = !ingresosVisible;
+  var el = document.getElementById("kpiIngresos");
+  var btn = document.getElementById("btnOjoIngresos");
+  if(ingresosVisible){
+    el.textContent = ingresosReal;
+    btn.style.color = "var(--gold)";
+  } else {
+    el.textContent = "••••••";
+    btn.style.color = "var(--gray)";
+  }
+});
+
 var musicaActiva = false;
 document.getElementById("musicBtn").addEventListener("click", function(){
   var iframe = document.getElementById("ytPlayer");
