@@ -406,7 +406,8 @@ document.addEventListener("DOMContentLoaded", function(){
   document.getElementById("tablaBody").addEventListener("click", function(e){
     var btn = e.target.closest("[data-dominio]");
     if(!btn) return;
-    confirmarToggle(btn.dataset.dominio, btn.dataset.negocio, btn.dataset.nuevo);
+    console.log("DATASET:", btn.dataset.dominio);
+confirmarToggle(btn.dataset.dominio, btn.dataset.negocio, btn.dataset.nuevo);
   });
 });
 
