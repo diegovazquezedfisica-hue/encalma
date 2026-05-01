@@ -253,8 +253,8 @@ function cargarDatos(){
 }
 
 function renderDashboard(data){
-  var clientes = (data.clientes || []).slice(1).filter(function(c){ return c[1]; });
-  var control = (data.control || []).slice(1).filter(function(c){ return c[0]; });
+  var clientes = (data.clientes || []).slice(4).filter(function(c){ return c[1] && c[1] !== "Negocio"; });
+  var control = (data.control || []).slice(3).filter(function(c){ return c[0] && String(c[0]).includes("http"); });
   var activos = control.filter(function(c){ return String(c[1]||"").trim().toUpperCase() === "ACTIVO"; }).length;
   var suspendidos = control.filter(function(c){ return String(c[1]||"").trim().toUpperCase() === "SUSPENDIDO"; }).length;
   var ingreso = clientes.reduce(function(sum, c){ var v = parseInt(String(c[12]||"").replace(/[^0-9]/g,"")); return sum + (v||0); }, 0);
@@ -273,39 +273,47 @@ function renderDashboard(data){
     var url = c[6]||"";
     var plan = c[11]||"-";
     var notas = c[13]||"-";
-    var dominio = url.replace(/https?:\/\//,"").split("/")[0].toLowerCase();
-    var cr = control.find(function(r){ return String(r[0]||"").trim().toLowerCase() === dominio; });
+    // Match by full URL or domain
+    var cr = control.find(function(r){
+      var rUrl = String(r[0]||"").trim().toLowerCase();
+      return rUrl === url.toLowerCase() || rUrl === url.replace(/https?:\/\//,"").split("/")[0].toLowerCase();
+    });
     var estado = cr ? String(cr[1]||"").trim().toUpperCase() : "";
-    var vencimiento = cr ? String(cr[2]||"") : "";
-    var badge = estado === "ACTIVO"
-      ? "<span class='badge badge-activo'>ACTIVO</span>"
-      : estado === "SUSPENDIDO"
-      ? "<span class='badge badge-suspendido'>SUSPENDIDO</span>"
-      : "<span class='badge'>-</span>";
-    var vencTxt = vencimiento;
+    var vencRaw = cr ? String(cr[2]||"") : "";
+    // Parse ISO date or dd/mm/yyyy
+    var vencTxt = "-";
     var vencClass = "ok";
-    if(vencimiento){
-      var parts = vencimiento.split("/");
-      if(parts.length===3){
-        var fv = new Date(parseInt(parts[2]),parseInt(parts[1])-1,parseInt(parts[0]));
+    var fv = null;
+    if(vencRaw){
+      if(vencRaw.includes("T")){
+        fv = new Date(vencRaw);
+        var d = fv.getDate(); var m = fv.getMonth()+1; var y = fv.getFullYear();
+        vencTxt = String(d).padStart(2,"0")+"/"+String(m).padStart(2,"0")+"/"+y;
+      } else {
+        var parts = vencRaw.split("/");
+        if(parts.length===3){ fv = new Date(parseInt(parts[2]),parseInt(parts[1])-1,parseInt(parts[0])); vencTxt = vencRaw; }
+      }
+      if(fv && !isNaN(fv)){
         var hoy = new Date(); hoy.setHours(0,0,0,0);
         var diff = Math.floor((fv-hoy)/(1000*60*60*24));
         if(diff<0){ vencClass="vencido"; vencTxt+=" VENCIDO"; }
         else if(diff<=7){ vencClass="warning"; vencTxt+=" ("+diff+"d)"; }
       }
     }
+    var badge = estado === "ACTIVO"
+      ? "<span class='badge badge-activo'>ACTIVO</span>"
+      : estado === "SUSPENDIDO"
+      ? "<span class='badge badge-suspendido'>SUSPENDIDO</span>"
+      : "<span class='badge'>-</span>";
     var btnToggle = "";
-    if(dominio && cr){
-      if(estado==="ACTIVO") btnToggle = "<button class='btn-toggle suspender' data-dominio='"+dominio+"' data-negocio='"+negocio+"' data-nuevo='SUSPENDIDO'>Suspender</button>";
-      else btnToggle = "<button class='btn-toggle activar' data-dominio='"+dominio+"' data-negocio='"+negocio+"' data-nuevo='ACTIVO'>Activar</button>";
+    if(cr){
+      var crUrl = String(cr[0]||"").trim();
+      if(estado==="ACTIVO") btnToggle = "<button class='btn-toggle suspender' data-dominio='"+crUrl+"' data-negocio='"+negocio+"' data-nuevo='SUSPENDIDO'>Suspender</button>";
+      else btnToggle = "<button class='btn-toggle activar' data-dominio='"+crUrl+"' data-negocio='"+negocio+"' data-nuevo='ACTIVO'>Activar</button>";
     }
     return "<tr><td style='color:var(--gray);font-size:11px'>"+(i+1)+"</td><td class='td-negocio'>"+negocio+"</td><td class='td-rubro'>"+rubro+"</td><td style='font-size:11px'>"+contacto+"</td><td class='td-url'>"+(url?"<a href='"+url+"' target='_blank'>Abrir</a>":"-")+"</td><td>"+badge+"</td><td class='td-venc "+vencClass+"'>"+vencTxt+"</td><td style='font-size:11px;color:var(--gold)'>"+plan+"</td><td style='font-size:10px'>"+notas+"</td><td>"+btnToggle+"</td></tr>";
   }).join("");
-  document.getElementById("tablaBody").addEventListener("click", function(e){
-    var btn = e.target.closest("[data-dominio]");
-    if(!btn) return;
-    confirmarToggle(btn.dataset.dominio, btn.dataset.negocio, btn.dataset.nuevo);
-  });
+
 }
 
 function confirmarToggle(dominio, negocio, nuevoEstado){
@@ -388,6 +396,15 @@ function actualizarReloj(){
 }
 actualizarReloj();
 setInterval(actualizarReloj, 1000);
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  document.getElementById("tablaBody").addEventListener("click", function(e){
+    var btn = e.target.closest("[data-dominio]");
+    if(!btn) return;
+    confirmarToggle(btn.dataset.dominio, btn.dataset.negocio, btn.dataset.nuevo);
+  });
+});
 
 var musicaActiva = false;
 document.getElementById("musicBtn").addEventListener("click", function(){
