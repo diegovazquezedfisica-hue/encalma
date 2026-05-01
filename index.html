@@ -294,7 +294,6 @@ function ejecutarToggle(){
   document.getElementById("loadingBar").classList.add("active");
   var cbName = "tCb"+Date.now();
   window[cbName] = function(data){
-    delete window[cbName];
     document.getElementById("loadingBar").classList.remove("active");
     if(data.ok){ cargarDatos(); } else { alert("Error: "+(data.error||"desconocido")); }
   };
