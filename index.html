@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRL Gestión | Sistema de Gestión a Medida</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8d080;
+    --gold-dim: #8a6e2f;
+    --black: #080808;
+    --surface: #0e0e0e;
+    --surface2: #141414;
+    --border: #1f1f1f;
+    --text: #f0ece4;
+    --muted: #888;
+    --dim: #555;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-seal {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+  }
+
+  .nav-seal svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: .5px;
+    transition: color .2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 9px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 60%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.015) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.015) 80px);
+    pointer-events: none;
+  }
+
+  .hero-seal {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    margin: 0 auto 28px;
+    position: relative;
+  }
+
+  .hero-seal::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .hero-seal svg { width: 36px; height: 36px; }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 440px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--black);
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .3px;
+    transition: background .2s, transform .15s;
+    display: inline-block;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: border-color .2s, color .2s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  /* ─── STRIP ─── */
+  .strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .strip-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .strip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    padding: 80px 24px;
+  }
+
+  .section-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.15;
+  }
+
+  .section-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* ─── PROBLEMAS ─── */
+  .problems { background: var(--surface); }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .problem-item {
+    background: var(--surface2);
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .problem-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .problem-item:hover::before { opacity: 1; }
+
+  .problem-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--border);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 12px;
+    transition: color .2s;
+  }
+
+  .problem-item:hover .problem-num { color: var(--gold-dim); }
+
+  .problem-text {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── FEATURES ─── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 22px;
+    transition: border-color .2s;
+  }
+
+  .feature-card:hover { border-color: var(--gold-dim); }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+
+  .feature-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── PLANES ─── */
+  .plans { background: var(--surface); }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .plan-card {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    position: relative;
+    transition: border-color .2s;
+  }
+
+  .plan-card:hover { border-color: var(--gold-dim); }
+
+  .plan-card.featured {
+    border-color: var(--gold);
+    background: #0d0b06;
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--black);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .plan-price {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .plan-price span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .plan-monthly {
+    font-size: 13px;
+    color: var(--dim);
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .plan-features {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  .plan-features li {
+    font-size: 13px;
+    color: #aaa;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .plan-features li:last-child { border-bottom: none; }
+
+  .plan-features li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    opacity: .7;
+  }
+
+  .plan-delivery {
+    font-size: 11px;
+    color: var(--dim);
+    text-align: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .plan-delivery strong { color: var(--gold); font-weight: 500; }
+
+  /* ─── PROCESO ─── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .step {
+    background: var(--surface2);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .step h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── CTA FINAL ─── */
+  .cta-section {
+    background: var(--black);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-box {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .cta-box h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  .cta-box p {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .btn-wa {
+    background: #25D366;
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background .2s, transform .15s;
+  }
+
+  .btn-wa:hover { background: #1ebe59; transform: translateY(-1px); }
+
+  .cta-note {
+    font-size: 12px;
+    color: var(--dim);
+    margin-top: 20px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .footer-sub {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  footer p {
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 600px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .strip { gap: 20px; padding: 16px 20px; }
+    section { padding: 60px 20px; }
+    footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+  }
+
+  /* ─── ACCESO MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    text-align: center;
+  }
+
+  .modal-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .modal-box p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px; right: 18px;
+    background: none;
+    border: none;
+    color: var(--dim);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color .2s;
+  }
+
+  .modal-close:hover { color: var(--muted); }
+
+  .system-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .system-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    text-decoration: none;
+    transition: border-color .2s, background .2s;
+    cursor: pointer;
+  }
+
+  .system-btn:hover {
+    border-color: var(--gold-dim);
+    background: #0f0f0f;
+  }
+
+  .system-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .system-info { text-align: left; }
+
+  .system-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .system-desc {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .modal-note {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  /* ─── BLOQUEADO OVERLAY ─── */
+  .blocked-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #080808;
+    z-index: 300;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .blocked-overlay.active { display: flex; }
+
+  .blocked-overlay h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--gold);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .blocked-overlay p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  /* ─── BOTÓN DRL OCULTO en footer ─── */
+  .drl-access-btn {
+    background: none;
+    border: none;
+    color: var(--dim);
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .drl-access-btn:hover { color: var(--gold); }
+
+  /* ─── BOTÓN ACCESO CLIENTES en nav ─── */
+  .nav-access {
+    border: 1px solid var(--border);
+    color: var(--muted) !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 12px !important;
+    transition: border-color .2s, color .2s !important;
+    background: none !important;
+    cursor: pointer;
+  }
+
+  .nav-access:hover { border-color: var(--gold-dim) !important; color: var(--gold) !important; background: none !important; }
+
+  /* ─── FADE IN ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .7s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: none; }
+  }
+
+  .delay-1 { animation-delay: .1s; }
+  .delay-2 { animation-delay: .22s; }
+  .delay-3 { animation-delay: .36s; }
+  .delay-4 { animation-delay: .5s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-seal">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+        <text x="12" y="16" text-anchor="middle" fill="#c9a84c" font-size="7" font-family="Georgia" font-weight="700">DRL</text>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-brand">DRL</div>
+      <div style="font-size:9px;color:#555;letter-spacing:2px;text-transform:uppercase">Gestión</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problemas">Problemas</a></li>
+    <li><a href="#features">Qué incluye</a></li>
+    <li><a href="#planes">Planes</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#" id="nav-acceso-btn" class="nav-access">Acceso Clientes</a></li>
+    <li><a href="#contacto" class="nav-cta">Hablar por WhatsApp</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-seal fade-in">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="18" stroke="#c9a84c" stroke-width="1.5"/>
+      <circle cx="20" cy="20" r="14" stroke="#c9a84c" stroke-width=".5" stroke-dasharray="2 2"/>
+      <text x="20" y="25" text-anchor="middle" fill="#c9a84c" font-size="9" font-family="Georgia" font-weight="700">DRL</text>
+    </svg>
+  </div>
+  <p class="hero-eyebrow fade-in delay-1">Sistema de Gestión · A medida</p>
+  <h1 class="fade-in delay-2">Tu negocio ordenado,<br><em>desde el primer día</em></h1>
+  <p class="hero-sub fade-in delay-3">Paneles web personalizados para profesionales con turnos y clientes. Sin planillas. Sin caos. Sin perder tiempo.</p>
+  <div class="hero-actions fade-in delay-4">
+    <a href="https://wa.me/5491133252814?text=Hola%20Diego%2C%20me%20interesa%20el%20sistema%20DRL%20Gesti%C3%B3n" class="btn-gold">Quiero mi sistema →</a>
+    <a href="#planes" class="btn-outline">Ver planes</a>
+  </div>
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item"><div class="strip-dot"></div> Panel web propio</div>
+  <div class="strip-item"><div class="strip-dot"></div> Datos en Google Sheets</div>
+  <div class="strip-item"><div class="strip-dot"></div> WhatsApp automático</div>
+  <div class="strip-item"><div class="strip-dot"></div> Sin instalaciones</div>
+  <div class="strip-item"><div class="strip-dot"></div> Soporte incluido</div>
+</div>
+
+<!-- PROBLEMAS -->
+<section class="problems" id="problemas">
+  <div class="section-inner">
+    <p class="section-label">El problema</p>
+    <h2 class="section-title">¿Te suena familiar?</h2>
+    <p class="section-sub">Estos son los problemas que resolvemos con cada sistema</p>
+    <div class="problems-grid">
+      <div class="problem-item">
+        <div class="problem-num">01</div>
+        <p class="problem-text">Perdés turnos porque la agenda es un caos o está en papel</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">02</div>
+        <p class="problem-text">No sabés cuánto facturaste este mes ni quién te debe</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">03</div>
+        <p class="problem-text">Tus clientes se pierden porque no hay seguimiento</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">04</div>
+        <p class="problem-text">Usás planillas que sólo vos entendés y no escalan</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <p class="section-label">El sistema</p>
+    <h2 class="section-title">Todo en un solo lugar</h2>
+    <p class="section-sub">Un panel web al que accedés desde el celular o la computadora, con todo lo que necesitás</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h4>Agenda de turnos</h4>
+        <p>Grilla visual, confirmaciones automáticas y recordatorios por WhatsApp sin tocar el celular</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h4>Fichero de clientes</h4>
+        <p>Historial completo, datos de contacto, alertas médicas y seguimiento personalizado</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h4>Dashboard de métricas</h4>
+        <p>KPIs del negocio en tiempo real: ingresos, turnos, clientes nuevos y más</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎁</div>
+        <h4>Gift Cards</h4>
+        <p>Generador de códigos, seguimiento de uso y gestión de saldo disponible</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h4>Automatizaciones</h4>
+        <p>Confirmaciones, cancelaciones y recordatorios que funcionan solos, sin intervención</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h4>Acceso con contraseña</h4>
+        <p>Panel seguro, privado y accesible sólo para vos o tu equipo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="plans" id="planes">
+  <div class="section-inner">
+    <p class="section-label">Inversión</p>
+    <h2 class="section-title">Planes y precios</h2>
+    <p class="section-sub">Setup único + cuota mensual de mantenimiento y soporte</p>
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price">USD 80 <span>setup</span></div>
+        <div class="plan-monthly">+ USD 15 / mes</div>
+        <ul class="plan-features">
+          <li>Agenda de turnos</li>
+          <li>Fichero de clientes</li>
+          <li>Panel web propio</li>
+          <li>Configuración incluida</li>
+        </ul>
+        <div class="plan-delivery">Entrega en <strong>48 hs</strong></div>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="plan-badge">Más elegido</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">USD 150 <span>setup</span></div>
+        <div class="plan-monthly">+ USD 25 / mes</div>
+        <ul class="plan-features">
+          <li>Todo lo del Básico</li>
+          <li>Recordatorios WhatsApp</li>
+          <li>Dashboard de métricas</li>
+          <li>Gift Cards</li>
+          <li>Automatizaciones</li>
+          <li>Google Calendar integrado</li>
+        </ul>
+        <div class="plan-delivery">Entrega en <strong>3 a 5 días</strong></div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">USD 300 <span>setup</span></div>
+        <div class="plan-monthly">+ USD 40 / mes</div>
+        <ul class="plan-features">
+          <li>Sistema 100% personalizado</li>
+          <li>Integraciones a medida</li>
+          <li>Soporte prioritario</li>
+          <li>Capacitación incluida</li>
+          <li>Múltiples operadores</li>
+          <li>Control de licencias</li>
+        </ul>
+        <div class="plan-delivery">Entrega en <strong>5 a 10 días</strong></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso">
+  <div class="section-inner">
+    <p class="section-label">Cómo funciona</p>
+    <h2 class="section-title">Del contacto al sistema en días</h2>
+    <p class="section-sub">Un proceso simple, sin tecnicismos</p>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h4>Hablamos</h4>
+        <p>Me contás cómo funciona tu negocio y qué necesitás ordenar</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h4>Diseño el sistema</h4>
+        <p>Armo el panel adaptado a tus horarios, servicios y forma de trabajar</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h4>Te lo entrego</h4>
+        <p>Con acceso, capacitación y soporte para que empieces a usarlo de inmediato</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h4>Seguimos juntos</h4>
+        <p>Mantenimiento mensual, actualizaciones y mejoras según tu crecimiento</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <div class="cta-box">
+    <p class="section-label" style="text-align:center">Empezá esta semana</p>
+    <h2>Tu sistema listo<br>en días, no meses</h2>
+    <p>Sin complicaciones técnicas. Te cuento cómo funciona, sin compromiso, y si arrancamos, en pocos días tenés tu panel funcionando.</p>
+    <a href="https://wa.me/5491133252814?text=Hola%20Diego%2C%20me%20interesa%20el%20sistema%20DRL%20Gesti%C3%B3n" class="btn-wa">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Hablar por WhatsApp
+    </a>
+    <p class="cta-note">Respondemos en menos de 24 hs · Sin compromiso</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="nav-seal">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+        <text x="12" y="16" text-anchor="middle" fill="#c9a84c" font-size="7" font-family="Georgia" font-weight="700">DRL</text>
+      </svg>
+    </div>
+    <div>
+      <div class="footer-brand">DRL</div>
+      <div class="footer-sub">Sistema de Gestión</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <p>© 2026 · Desarrollado por Diego Vázquez</p>
+    <button class="drl-access-btn" id="footer-drl-btn">· DRL ·</button>
+  </div>
+</footer>
+
+<!-- MODAL ACCESO CLIENTES -->
+<div class="modal-overlay" id="modal-clientes">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close-btn">✕</button>
+    <div style="width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;background:var(--surface2)">
+      <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+        <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+        <text x="12" y="16" text-anchor="middle" fill="#c9a84c" font-size="6" font-family="Georgia" font-weight="700">DRL</text>
+      </svg>
+    </div>
+    <h3>Acceso al sistema</h3>
+    <p>Seleccioná tu panel para continuar</p>
+    <div class="system-list">
+      <a href="https://encalmamasoterapiabienestar-droid.github.io/encalma-panel" target="_blank" class="system-btn">
+        <div class="system-icon">🌊</div>
+        <div class="system-info">
+          <span class="system-name">En Calma</span>
+          <span class="system-desc">Masoterapia · Bienestar</span>
+        </div>
+      </a>
+      <a href="https://loquefaltaba-estetica.github.io/lqf_dashboard/index.html" target="_blank" class="system-btn">
+        <div class="system-icon">✨</div>
+        <div class="system-info">
+          <span class="system-name">Lo Que Faltaba</span>
+          <span class="system-desc">Estética · Dashboard</span>
+        </div>
+      </a>
+    </div>
+    <p class="modal-note">¿No encontrás tu sistema? Escribinos por WhatsApp</p>
+  </div>
+</div>
+
+<!-- MODAL DRL — ACCESO EXCLUSIVO -->
+<div class="modal-overlay" id="modal-drl">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-drl-close">✕</button>
+    <div style="width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;background:var(--surface2)">
+      <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+        <path d="M12 2L15 9H21L16 13.5L18 20L12 16L6 20L8 13.5L3 9H9L12 2Z" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <h3>Acceso exclusivo</h3>
+    <p style="margin-bottom:20px">Panel de control DRL · Solo administrador</p>
+    <div id="drl-login-form">
+      <input type="password" id="drl-password-input" placeholder="Contraseña" style="
+        width:100%;
+        background:#0e0e0e;
+        border:1px solid #1f1f1f;
+        border-radius:6px;
+        padding:12px 16px;
+        color:#f0ece4;
+        font-family:'DM Sans',sans-serif;
+        font-size:14px;
+        margin-bottom:10px;
+        outline:none;
+        transition:border-color .2s;
+      "/>
+      <p id="drl-error" style="color:#c0392b;font-size:12px;margin-bottom:10px;display:none;">Contraseña incorrecta</p>
+      <button id="drl-login-btn" style="
+        width:100%;
+        background:var(--gold);
+        color:#080808;
+        border:none;
+        border-radius:6px;
+        padding:12px;
+        font-family:'DM Sans',sans-serif;
+        font-size:14px;
+        font-weight:600;
+        cursor:pointer;
+        transition:background .2s;
+      ">Ingresar →</button>
+    </div>
+    <p class="modal-note" style="margin-top:16px">· DRL Gestión · Acceso restringido ·</p>
+  </div>
+</div>
+
+<!-- OVERLAY BLOQUEADO (licencia suspendida) -->
+<div class="blocked-overlay" id="blocked-overlay">
+  <div style="width:60px;height:60px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 24px">
+    <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+      <rect x="3" y="11" width="18" height="11" rx="2" stroke="#c9a84c" stroke-width="1.5"/>
+      <path d="M7 11V7a5 5 0 0110 0v4" stroke="#c9a84c" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <h2>Servicio Suspendido</h2>
+  <p>Este sistema no está disponible en este momento.<br>Contactá al administrador para regularizar el acceso.</p>
+  <a href="https://wa.me/5491133252814?text=Hola%20Diego%2C%20mi%20sistema%20aparece%20suspendido" class="btn-wa" style="font-size:14px;padding:12px 28px">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Contactar a Diego
+  </a>
+</div>
+
+<script>
+  const API_CONTROL = 'https://script.google.com/macros/s/AKfycbwlM0gexbjIQTshIgWYG2Gy2t49P-M3WrOlpv6HJ7tuDj4XMskvCFfAuz8Iz86Ri9M3Tg/exec';
+  const DOMINIO = 'drl-gestion.github.io';
+
+  // Chequeo de licencia al cargar
+  function checkLicencia() {
+    var s = document.createElement('script');
+    s.src = API_CONTROL + '?dominio=' + DOMINIO + '&callback=recibirLicencia&t=' + Date.now();
+    document.body.appendChild(s);
+  }
+
+  function recibirLicencia(data) {
+    if (data && data.estado === 'SUSPENDIDO') {
+      document.getElementById('blocked-overlay').classList.add('active');
+    }
+  }
+
+  window.addEventListener('load', function() {
+    try { checkLicencia(); } catch(e) {}
+  });
+
+  // Modal Clientes
+  var btnNav = document.getElementById('nav-acceso-btn');
+  var modalClientes = document.getElementById('modal-clientes');
+  var modalClose = document.getElementById('modal-close-btn');
+
+  btnNav.addEventListener('click', function(e) {
+    e.preventDefault();
+    modalClientes.classList.add('active');
+  });
+
+  modalClose.addEventListener('click', function() {
+    modalClientes.classList.remove('active');
+  });
+
+  modalClientes.addEventListener('click', function(e) {
+    if (e.target === modalClientes) modalClientes.classList.remove('active');
+  });
+
+  // Modal DRL (botón oculto en footer)
+  var btnDRL = document.getElementById('footer-drl-btn');
+  var modalDRL = document.getElementById('modal-drl');
+  var modalDRLClose = document.getElementById('modal-drl-close');
+  var drlInput = document.getElementById('drl-password-input');
+  var drlBtn = document.getElementById('drl-login-btn');
+  var drlError = document.getElementById('drl-error');
+
+  btnDRL.addEventListener('click', function() {
+    drlInput.value = '';
+    drlError.style.display = 'none';
+    modalDRL.classList.add('active');
+    setTimeout(function(){ drlInput.focus(); }, 200);
+  });
+
+  modalDRLClose.addEventListener('click', function() {
+    modalDRL.classList.remove('active');
+  });
+
+  modalDRL.addEventListener('click', function(e) {
+    if (e.target === modalDRL) modalDRL.classList.remove('active');
+  });
+
+  function checkDRLPassword() {
+    if (drlInput.value === 'DRL2026') {
+      modalDRL.classList.remove('active');
+      window.open('https://diegovazquezedfisica-hue.github.io/DRL-Gestion/panel.html', '_blank');
+    } else {
+      drlError.style.display = 'block';
+      drlInput.value = '';
+      drlInput.focus();
+    }
+  }
+
+  drlBtn.addEventListener('click', checkDRLPassword);
+
+  drlInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkDRLPassword();
+  });
+
+  // ESC cierra cualquier modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      modalClientes.classList.remove('active');
+      modalDRL.classList.remove('active');
+    }
+  });
+</script>
+
+</body>
+</html>
