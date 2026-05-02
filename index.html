@@ -827,7 +827,7 @@
     <li><a href="#planes">Planes</a></li>
     <li><a href="#proceso">Proceso</a></li>
     <li><a href="#" id="nav-acceso-btn" class="nav-access">Acceso Clientes</a></li>
-    <li><a href="#" id="nav-drl-btn" class="nav-access" style="border-color:var(--gold-dim);color:var(--gold-dim)">Acceso Exclusivo</a></li>
+    <li><a href="https://diegovazquezedfisica-hue.github.io/DRL-Gestion/panel.html" target="_blank" class="nav-access" style="border-color:var(--gold-dim);color:var(--gold-dim)">Acceso Exclusivo</a></li>
     <li><a href="#contacto" class="nav-cta">Hablar por WhatsApp</a></li>
   </ul>
 </nav>
@@ -1092,36 +1092,16 @@
     </div>
     <h3>Acceso exclusivo</h3>
     <p style="margin-bottom:20px">Panel de control DRL · Solo administrador</p>
-    <div id="drl-login-form">
-      <input type="password" id="drl-password-input" placeholder="Contraseña" style="
-        width:100%;
-        background:#0e0e0e;
-        border:1px solid #1f1f1f;
-        border-radius:6px;
-        padding:12px 16px;
-        color:#f0ece4;
-        font-family:'DM Sans',sans-serif;
-        font-size:14px;
-        margin-bottom:10px;
-        outline:none;
-        transition:border-color .2s;
-      "/>
-      <p id="drl-error" style="color:#c0392b;font-size:12px;margin-bottom:10px;display:none;">Contraseña incorrecta</p>
-      <button id="drl-login-btn" style="
-        width:100%;
-        background:var(--gold);
-        color:#080808;
-        border:none;
-        border-radius:6px;
-        padding:12px;
-        font-family:'DM Sans',sans-serif;
-        font-size:14px;
-        font-weight:600;
-        cursor:pointer;
-        transition:background .2s;
-      ">Ingresar →</button>
+    <div class="system-list">
+      <a href="https://docs.google.com/spreadsheets/d/1jikSFfvuxPykslosg11oUKBeqI0Gd_eETC8v6oZQDKA" target="_blank" class="system-btn">
+        <div class="system-icon" style="font-size:14px">📊</div>
+        <div class="system-info">
+          <span class="system-name">Control de Licencias</span>
+          <span class="system-desc">Activar · Suspender · Ver vencimientos</span>
+        </div>
+      </a>
     </div>
-    <p class="modal-note" style="margin-top:16px">· DRL Gestión · Acceso restringido ·</p>
+    <p class="modal-note" style="margin-top:8px">· DRL Gestión · Acceso restringido ·</p>
   </div>
 </div>
 
@@ -1184,25 +1164,9 @@
   var btnDRL = document.getElementById('footer-drl-btn');
   var modalDRL = document.getElementById('modal-drl');
   var modalDRLClose = document.getElementById('modal-drl-close');
-  var drlInput = document.getElementById('drl-password-input');
-  var drlBtn = document.getElementById('drl-login-btn');
-  var drlError = document.getElementById('drl-error');
 
   btnDRL.addEventListener('click', function() {
-    drlInput.value = '';
-    drlError.style.display = 'none';
     modalDRL.classList.add('active');
-    setTimeout(function(){ drlInput.focus(); }, 200);
-  });
-
-  // Nav Acceso Exclusivo button
-  var btnNavDRL = document.getElementById('nav-drl-btn');
-  btnNavDRL.addEventListener('click', function(e) {
-    e.preventDefault();
-    drlInput.value = '';
-    drlError.style.display = 'none';
-    modalDRL.classList.add('active');
-    setTimeout(function(){ drlInput.focus(); }, 200);
   });
 
   modalDRLClose.addEventListener('click', function() {
@@ -1211,23 +1175,6 @@
 
   modalDRL.addEventListener('click', function(e) {
     if (e.target === modalDRL) modalDRL.classList.remove('active');
-  });
-
-  function checkDRLPassword() {
-    if (drlInput.value === 'DRL2026') {
-      modalDRL.classList.remove('active');
-      window.open('https://diegovazquezedfisica-hue.github.io/DRL-Gestion/panel.html', '_blank');
-    } else {
-      drlError.style.display = 'block';
-      drlInput.value = '';
-      drlInput.focus();
-    }
-  }
-
-  drlBtn.addEventListener('click', checkDRLPassword);
-
-  drlInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') checkDRLPassword();
   });
 
   // ESC cierra cualquier modal
