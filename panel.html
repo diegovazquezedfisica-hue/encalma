@@ -178,7 +178,7 @@ function verificarPass(){
   if(inp.value === PASS){
     var ov = document.getElementById("loginOverlay");
     ov.classList.add("ocultar");
-    setTimeout(function(){ ov.style.display="none"; ir("portada"); }, 800);
+    setTimeout(function(){ ov.style.display="none"; ir("dashboard"); }, 800);
   } else {
     err.textContent = "Contrasena incorrecta";
     inp.classList.add("error");
