@@ -1308,10 +1308,9 @@
 
   // Chequeo de licencia al cargar
   function checkLicencia() {
-    fetch(API_CONTROL + '?dominio=' + DOMINIO + '&t=' + Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(data){ recibirLicencia(data); })
-      .catch(function(){});
+    var s = document.createElement('script');
+    s.src = API_CONTROL + '?dominio=' + DOMINIO + '&callback=recibirLicencia&t=' + Date.now();
+    document.body.appendChild(s);
   }
   function recibirLicencia(data) {
     if (data && data.estado === 'SUSPENDIDO') {
@@ -1381,18 +1380,20 @@
     document.getElementById('dni-loading').style.display = 'block';
     document.getElementById('dni-login-btn').disabled = true;
 
-    fetch(API_CONTROL + '?accion=buscarDNI&dni=' + encodeURIComponent(dni) + '&t=' + Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(data){ recibirCliente(data); })
-      .catch(function() {
-        document.getElementById('dni-loading').style.display = 'none';
-        document.getElementById('dni-login-btn').disabled = false;
-        document.getElementById('dni-error').textContent = 'Error de conexión. Reintentá.';
-        document.getElementById('dni-error').style.display = 'block';
-      });
+    dniTimeout = setTimeout(function() {
+      document.getElementById('dni-loading').style.display = 'none';
+      document.getElementById('dni-login-btn').disabled = false;
+      document.getElementById('dni-error').textContent = 'Tiempo de espera agotado. Reintentá o contactanos.';
+      document.getElementById('dni-error').style.display = 'block';
+    }, 12000);
+
+    var s = document.createElement('script');
+    s.src = API_CONTROL + '?accion=buscarDNI&dni=' + encodeURIComponent(dni) + '&callback=recibirCliente&t=' + Date.now();
+    document.body.appendChild(s);
   }
 
-  function recibirCliente(data) {
+  window.recibirCliente = function(data) {
+    if (dniTimeout) { clearTimeout(dniTimeout); dniTimeout = null; }
     document.getElementById('dni-loading').style.display = 'none';
     document.getElementById('dni-login-btn').disabled = false;
 
