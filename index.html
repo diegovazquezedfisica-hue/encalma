@@ -1371,6 +1371,8 @@
     document.getElementById('cliente-panel').style.display = 'none';
   }
 
+  var dniTimeout = null;
+
   function buscarCliente() {
     var dni = document.getElementById('dni-input').value.trim();
     if (!dni) return;
@@ -1378,12 +1380,21 @@
     document.getElementById('dni-loading').style.display = 'block';
     document.getElementById('dni-login-btn').disabled = true;
 
+    // Timeout de 12 segundos
+    dniTimeout = setTimeout(function() {
+      document.getElementById('dni-loading').style.display = 'none';
+      document.getElementById('dni-login-btn').disabled = false;
+      document.getElementById('dni-error').textContent = 'Tiempo de espera agotado. Reintentá o contactanos.';
+      document.getElementById('dni-error').style.display = 'block';
+    }, 12000);
+
     var s = document.createElement('script');
     s.src = API_CONTROL + '?accion=buscarDNI&dni=' + encodeURIComponent(dni) + '&callback=recibirCliente&t=' + Date.now();
     document.body.appendChild(s);
   }
 
   window.recibirCliente = function(data) {
+    if (dniTimeout) { clearTimeout(dniTimeout); dniTimeout = null; }
     document.getElementById('dni-loading').style.display = 'none';
     document.getElementById('dni-login-btn').disabled = false;
 
